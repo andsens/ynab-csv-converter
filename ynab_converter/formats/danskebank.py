@@ -1,29 +1,59 @@
+# -*- coding: utf-8 -*-
 import re
+from collections import namedtuple
+
+DanskebankLine = namedtuple('DanskebankLine', ['date', 'text', 'amount', 'balance', 'status', 'cleared'])
+amount_pattern = r'^-?\d{1,3}(\.\d{3})*,\d{2}$'
+column_patterns = {'date':    r'^\d{2}\.\d{2}\.\d{4}$',
+                   'text':    r'^.+$',
+                   'amount':  amount_pattern,
+                   'balance': amount_pattern,
+                   'status':  ur'^Udført$',
+                   'cleared': r'^(Ja|Nej)$',
+                   }
+column_patterns = {column: re.compile(regex) for column, regex in column_patterns.items()}
 
 
-def getlines(inhandle):
+def getlines(path):
+	from ynab_converter.unicode_csv import UnicodeReader
 	import csv
 	import datetime
 	import locale
+	from . import validate_line
+	from ynab import YnabLine
 
-	transactions = csv.reader(inhandle, delimiter=';',
-	                          quotechar='"', quoting=csv.QUOTE_ALL)
-	locale.setlocale(locale.LC_ALL, 'da_DK.UTF-8')
-	transactions.next()
-	for line in transactions:
-		[date, text, amount, saldo, status, afstemt] = map(lambda field: field.decode('iso-8859-1'), line)
-		date = datetime.datetime.strptime(date, '%d.%m.%Y')
-		payee, memo = parse_text(text)
-		category = u''
-		amount = locale.atof(amount)
-		if amount > 0:
-			outflow = 0
-			inflow = amount
-		else:
-			outflow = -amount
-			inflow = 0
+	with open(path) as handle:
+		transactions = UnicodeReader(handle, encoding='iso-8859-1',
+		                             delimiter=';', quotechar='"',
+		                             quoting=csv.QUOTE_ALL)
+		locale.setlocale(locale.LC_ALL, 'da_DK.UTF-8')
+		# Skip headers
+		transactions.next()
+		line_no = 1
+		for raw_line in transactions:
+			line_no += 1
+			try:
+				line = DanskebankLine(*raw_line)
+				validate_line(line, column_patterns)
 
-		yield [date, payee, category, memo, outflow, inflow]
+				date = datetime.datetime.strptime(line.date, '%d.%m.%Y')
+				payee, memo = parse_text(line.text)
+				category = u''
+				amount = locale.atof(line.amount)
+				if amount > 0:
+					outflow = 0.0
+					inflow = amount
+				else:
+					outflow = -amount
+					inflow = 0.0
+			except:
+				import sys
+				msg = (u"There was a problem on line {line} in {path}\n"
+				       .format(line=line_no, path=path))
+				sys.stderr.write(msg)
+				raise
+
+			yield YnabLine(date, payee, category, memo, outflow, inflow)
 
 
 def parse_text(text):

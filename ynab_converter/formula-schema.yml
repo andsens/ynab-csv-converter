@@ -1,0 +1,19 @@
+---
+$schema: http://json-schema.org/draft-04/schema#
+title: YNAB Converter formula
+type: object
+required: [format, outpath, archivepath, outprefix]
+additionalProperties: false
+properties:
+  format: {enum: [sparekassen, danskebank, nordnet]}
+  outpath: {$ref: '#/definitions/path'}
+  archivepath: {$ref: '#/definitions/path'}
+  outprefix: {$ref: '#/definitions/filename'}
+  factor: {type: number}
+definitions:
+  path:
+    type: string
+    pattern: ^[^\0]+$
+  filename:
+    type: string
+    pattern: ^[^/\0]+$
