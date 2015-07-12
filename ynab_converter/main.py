@@ -1,10 +1,10 @@
 
 def parse_opts():
 	import docopt
-	usage = """ynab-converter
+	usage = """ynab-csv-converter
 Converts transactionlists from a format to ynab format
 
-Usage: ynab-converter [options] FORMULA INFILE...
+Usage: ynab-csv-converter [options] FORMULA INFILE...
 
 Options:
 	-h, --help  show this help
@@ -27,7 +27,7 @@ def main():
 	opts = parse_opts()
 	formula = load_formula(opts['FORMULA'])
 
-	inform_modname = 'ynab_converter.formats.' + formula['format']
+	inform_modname = 'ynab_csv_converter.formats.' + formula['format']
 	informat = importlib.import_module(inform_modname)
 
 	out_basename = os.path.join(formula['outpath'], formula['outprefix'])

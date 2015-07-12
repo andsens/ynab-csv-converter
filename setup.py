@@ -11,11 +11,11 @@ def find_version(path):
 		return version_match.group(1)
 	raise RuntimeError("Unable to find version string.")
 
-setup(name='ynab-converter',
-      version=find_version(os.path.join(os.path.dirname(__file__), 'ynab_converter/__init__.py')),
+setup(name='ynab-csv-converter',
+      version=find_version(os.path.join(os.path.dirname(__file__), 'ynab_csv_converter/__init__.py')),
       packages=find_packages(),
       include_package_data=True,
-      entry_points={'console_scripts': ['ynab-converter = ynab_converter.main:main']},
+      entry_points={'console_scripts': ['ynab-csv-converter = ynab_csv_converter.main:main']},
       install_requires=['pyyaml >= 3.10',
                         'jsonschema >= 2.3.0',
                         'docopt >= 0.6.1',

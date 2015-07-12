@@ -1,4 +1,4 @@
-YNAB Converter
+YNAB CSV Converter
 ==============
 
 Converts bank record CSV files in various formats to YNAB CSV format.
@@ -10,12 +10,12 @@ converted exports.
 Installation
 -----
 ```sh
-pip install git+ssh://git@github.com/andsens/ynab-converter\#egg=ynab-converter
+pip install git+ssh://git@github.com/andsens/ynab-csv-converter\#egg=ynab-csv-converter
 ```
 
 Usage
 -----
-Usage: `ynab-converter [options] FORMULA INFILE...`
+Usage: `ynab-csv-converter [options] FORMULA INFILE...`
 
 Formula
 -------

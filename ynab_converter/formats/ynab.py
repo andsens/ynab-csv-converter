@@ -14,7 +14,7 @@ column_patterns = {column: re.compile(regex) for column, regex in column_pattern
 
 
 def getlines(path):
-	from ynab_converter.unicode_csv import UnicodeReader
+	from ynab_csv_converter.unicode_csv import UnicodeReader
 	import csv
 	import datetime
 	from . import validate_line
@@ -45,7 +45,7 @@ def getlines(path):
 
 
 def putlines(path, lines):
-	from ynab_converter.unicode_csv import UnicodeWriter
+	from ynab_csv_converter.unicode_csv import UnicodeWriter
 	import csv
 
 	with open(path, 'w') as handle:
