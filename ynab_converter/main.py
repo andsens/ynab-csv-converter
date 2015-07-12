@@ -36,48 +36,56 @@ def main():
 	for import_file in opts['INFILE']:
 		# Get the lines to import
 		# (and cache the list, we will iterate through it multiple times)
-		import_lines = list(informat.getlines(import_file))
+		all_lines = list(informat.getlines(import_file))
 
 		# Find the daterange we are importing
-		min_date = min([line.date for line in import_lines])
-		max_date = max([line.date for line in import_lines])
+		import_min = min([line.date for line in all_lines])
+		import_max = max([line.date for line in all_lines])
 
 		# Find previously converted files
-		previously_converted = list(find_daterange(out_basename, min_date, max_date))
+		previously_converted = list(find_daterange(out_basename, import_min, import_max))
 
 		# Get all lines from those previously converted files
 		prev_lines = chain(*(formats.ynab.getlines(path) for path in previously_converted))
 
 		# Filter previous lines to only contain transactions inside the import daterange
 		# (also cache this one, we do multiple lookups)
-		consolidation_lines = list([line for line in prev_lines if min_date <= line.date <= max_date])
+		consolidation_lines = list([line for line in prev_lines if import_min <= line.date <= import_max])
 
 		# Filter import lines using the previously converted transactions
-		unique_import_lines = [line for line in import_lines if line not in consolidation_lines]
+		unique_lines = [line for line in all_lines if line not in consolidation_lines]
+
+		if len(unique_lines) == 0:
+			print("No unique lines found in {path}".format(path=import_file))
+			continue
 
 		factor = formula.get('factor', 1)
 		if factor != 1:
 			# Multiply unique import lines by "factor"
-			unique_import_lines = list([factor_line(line, formula['factor']) for line in unique_import_lines])
+			unique_lines = list([factor_line(line, formula['factor']) for line in unique_lines])
 
-		# Date suffix for both the converted and archived file
-		date_suffix = '-' + min_date.strftime('%Y%m%d') + '-' + max_date.strftime('%Y%m%d')
+		# Find the daterange we are exporting and create the name for the output file with that
+		# We reverse the date order so that the files are sorted by newest transaction
+		export_min = min([line.date for line in unique_lines])
+		export_max = max([line.date for line in unique_lines])
+		date_suffix = '-' + export_max.strftime('%Y%m%d') + '-' + export_min.strftime('%Y%m%d')
+		output_filepath = out_basename + date_suffix + '.csv'
 
 		# Write import lines to outputfile
-		output_filepath = out_basename + date_suffix + '.csv'
 		if os.path.exists(output_filepath):
 			raise Exception("The file {path} already exists".format(path=output_filepath))
-		formats.ynab.putlines(output_filepath, unique_import_lines)
+		formats.ynab.putlines(output_filepath, unique_lines)
 
-		# Archive imported file
+		# Archive imported file (use the total daterange for the filename)
+		date_suffix = '-' + import_max.strftime('%Y%m%d') + '-' + import_min.strftime('%Y%m%d')
 		archive_filepath = archive_basename + date_suffix + '.csv'
 		if os.path.exists(archive_filepath):
 			raise Exception("The file {path} already exists".format(path=archive_filepath))
 		shutil.move(import_file, archive_filepath)
 
 		print("Wrote {written} out of {read} transactions to {path}"
-		      .format(written=len(unique_import_lines),
-		              read=len(import_lines),
+		      .format(written=len(unique_lines),
+		              read=len(all_lines),
 		              path=output_filepath))
 
 
@@ -92,7 +100,7 @@ def find_daterange(basename, min_date, max_date):
 	import glob
 	file_pattern = re.compile(
 		'^' + re.escape(basename) +
-		'-(?P<from>\d{4}\d{2}\d{2})-(?P<to>\d{4}\d{2}\d{2}).csv')
+		'-(?P<to>\d{4}\d{2}\d{2})-(?P<from>\d{4}\d{2}\d{2}).csv')
 	for path in glob.glob(basename + '*'):
 		result = file_pattern.match(path)
 		if result is None:
