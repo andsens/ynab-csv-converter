@@ -55,38 +55,37 @@ def main():
 		# Filter import lines using the previously converted transactions
 		unique_lines = [line for line in all_lines if line not in consolidation_lines]
 
-		if len(unique_lines) == 0:
-			print("No unique lines found in {path}".format(path=import_file))
-			continue
-
 		factor = formula.get('factor', 1)
 		if factor != 1:
 			# Multiply unique import lines by "factor"
 			unique_lines = list([factor_line(line, formula['factor']) for line in unique_lines])
 
-		# Find the daterange we are exporting and create the name for the output file with that
-		# We reverse the date order so that the files are sorted by newest transaction
-		export_min = min([line.date for line in unique_lines])
-		export_max = max([line.date for line in unique_lines])
-		date_suffix = '-' + export_max.strftime('%Y%m%d') + '-' + export_min.strftime('%Y%m%d')
-		output_filepath = out_basename + date_suffix + '.csv'
+		if len(unique_lines) > 0:
+			# Find the daterange we are exporting and create the name for the output file with that
+			# We reverse the date order so that the files are sorted by newest transaction
+			export_min = min([line.date for line in unique_lines])
+			export_max = max([line.date for line in unique_lines])
+			date_suffix = '-' + export_max.strftime('%Y%m%d') + '-' + export_min.strftime('%Y%m%d')
+			output_filepath = out_basename + date_suffix + '.csv'
 
-		# Write import lines to outputfile
-		if os.path.exists(output_filepath):
-			raise Exception("The file {path} already exists".format(path=output_filepath))
-		formats.ynab.putlines(output_filepath, unique_lines)
+			# Write import lines to outputfile
+			if os.path.exists(output_filepath):
+				raise Exception("The file {path} already exists".format(path=output_filepath))
+			formats.ynab.putlines(output_filepath, unique_lines)
 
-		# Archive imported file (use the total daterange for the filename)
+			print("Wrote {written} out of {read} transactions to {path}"
+			      .format(written=len(unique_lines),
+			              read=len(all_lines),
+			              path=output_filepath))
+		else:
+			print("No unique lines found in {path}".format(path=import_file))
+
+		# Archive original file (use the total daterange for the filename)
 		date_suffix = '-' + import_max.strftime('%Y%m%d') + '-' + import_min.strftime('%Y%m%d')
 		archive_filepath = archive_basename + date_suffix + '.csv'
 		if os.path.exists(archive_filepath):
 			raise Exception("The file {path} already exists".format(path=archive_filepath))
 		shutil.move(import_file, archive_filepath)
-
-		print("Wrote {written} out of {read} transactions to {path}"
-		      .format(written=len(unique_lines),
-		              read=len(all_lines),
-		              path=output_filepath))
 
 
 def factor_line(line, factor):
