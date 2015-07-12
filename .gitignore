@@ -1,1 +1,3 @@
 *.pyc
+/.tox
+/ynab_converter.egg-info
