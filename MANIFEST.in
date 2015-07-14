@@ -1,0 +1,2 @@
+include LICENSE
+include ynab_csv_converter/formula-schema.yml
