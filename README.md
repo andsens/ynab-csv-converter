@@ -27,7 +27,7 @@ outprefix: sparekassen-euro
 factor: 7.45
 ```
 
-All settings except `factor` are optional.
+All settings except `factor` are mandatory.
 The above formula looks for converted files in `/home/andsens/converted/sparekassen-euro-[daterange]`
 and removes transactions from the inputfiles that already exist in those converted
 files.
