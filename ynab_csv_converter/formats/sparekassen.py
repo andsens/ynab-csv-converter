@@ -1,7 +1,7 @@
 import re
 from collections import namedtuple
 
-SparekassenLine = namedtuple('YnabLine', ['date', 'txndate', 'text', 'amount', 'balance'])
+SparekassenLine = namedtuple('SparekassenLine', ['date', 'txndate', 'text', 'amount', 'balance'])
 amount_pattern = r'^-?\d{1,3}(\.\d{3})*,\d{2}$'
 date_pattern = r'^\d{2}-\d{2}-\d{4}$'
 column_patterns = {'date':    date_pattern,

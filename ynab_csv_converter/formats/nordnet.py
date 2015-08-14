@@ -1,12 +1,12 @@
 import re
 from collections import namedtuple
 
-NordnetLine = namedtuple('YnabLine', ['line_id', 'bogf_date', 'trns_date', 'val_date', 'trns_type',
-                                      'stock_name', 'instr_type', 'isin', 'quantity', 'price',
-                                      'interest', 'fee', 'amount', 'currency', 'buy_price',
-                                      'result', 'total_qty', 'saldo', 'exch_rate', 'trns_text',
-                                      'shred_date', 'verification_number',
-                                      ])
+NordnetLine = namedtuple('NordnetLine', ['line_id', 'bogf_date', 'trns_date', 'val_date', 'trns_type',
+                                         'stock_name', 'instr_type', 'isin', 'quantity', 'price',
+                                         'interest', 'fee', 'amount', 'currency', 'buy_price',
+                                         'result', 'total_qty', 'saldo', 'exch_rate', 'trns_text',
+                                         'shred_date', 'verification_number',
+                                         ])
 date_pattern = r'^\d{4}-\d{2}-\d{2}$'
 optional_date_pattern = r'^(\d{4}-\d{2}-\d{2}|)$'
 amount_pattern = r'^-?\d{1,3}(\.\d{3})*,\d{2,}$'
