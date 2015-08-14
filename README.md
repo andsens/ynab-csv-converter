@@ -44,3 +44,4 @@ Supported formats
 * DanskeBank (key: danskebank)
 * Sparekassen (key: sparekassen)
 * Nordnet (key: nordnet)
+* HypoVereinsbank (key: hypovereinsbank)

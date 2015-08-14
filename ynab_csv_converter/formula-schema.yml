@@ -5,7 +5,12 @@ type: object
 required: [format, outpath, archivepath, outprefix]
 additionalProperties: false
 properties:
-  format: {enum: [sparekassen, danskebank, nordnet]}
+  format:
+    enum:
+    - sparekassen
+    - danskebank
+    - nordnet
+    - hypovereinsbank
   outpath: {$ref: '#/definitions/path'}
   archivepath: {$ref: '#/definitions/path'}
   outprefix: {$ref: '#/definitions/filename'}
