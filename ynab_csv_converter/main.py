@@ -67,10 +67,13 @@ def main():
 			export_max = max([line.date for line in unique_lines])
 			date_suffix = '-' + export_max.strftime('%Y%m%d') + '-' + export_min.strftime('%Y%m%d')
 			output_filepath = out_basename + date_suffix + '.csv'
+			# Handle duplicate filenames by tacking on an increment counter
+			increment = 0
+			while os.path.exists(output_filepath):
+				increment += 1
+				output_filepath = out_basename + date_suffix + '-' + str(increment) + '.csv'
 
 			# Write import lines to outputfile
-			if os.path.exists(output_filepath):
-				raise Exception("The file {path} already exists".format(path=output_filepath))
 			formats.ynab.putlines(output_filepath, unique_lines)
 
 			print("Wrote {written} out of {read} transactions to {path}"
@@ -83,8 +86,10 @@ def main():
 		# Archive original file (use the total daterange for the filename)
 		date_suffix = '-' + import_max.strftime('%Y%m%d') + '-' + import_min.strftime('%Y%m%d')
 		archive_filepath = archive_basename + date_suffix + '.csv'
-		if os.path.exists(archive_filepath):
-			raise Exception("The file {path} already exists".format(path=archive_filepath))
+		increment = 0
+		while os.path.exists(archive_filepath):
+			increment += 1
+			archive_filepath = archive_basename + date_suffix + '-' + str(increment) + '.csv'
 		shutil.move(import_file, archive_filepath)
 
 
@@ -99,7 +104,7 @@ def find_daterange(basename, min_date, max_date):
 	import glob
 	file_pattern = re.compile(
 		'^' + re.escape(basename) +
-		'-(?P<to>\d{4}\d{2}\d{2})-(?P<from>\d{4}\d{2}\d{2}).csv')
+		'-(?P<to>\d{4}\d{2}\d{2})-(?P<from>\d{4}\d{2}\d{2})(-?P<inc>\d+)?.csv')
 	for path in glob.glob(basename + '*'):
 		result = file_pattern.match(path)
 		if result is None:
