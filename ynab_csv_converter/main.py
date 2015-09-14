@@ -111,5 +111,5 @@ def find_daterange(basename, min_date, max_date):
 			raise Exception('Found file that does not match pattern: ' + path)
 		fromdate = datetime.datetime.strptime(result.group('from'), '%Y%m%d')
 		todate = datetime.datetime.strptime(result.group('to'), '%Y%m%d')
-		if fromdate <= min_date <= todate or fromdate <= max_date <= todate:
+		if fromdate <= max_date and todate >= min_date:
 			yield path
