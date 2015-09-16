@@ -103,8 +103,7 @@ def find_daterange(prefix, min_date, max_date):
 	import re
 	import glob
 	file_pattern = re.compile(
-		'^' + re.escape(prefix) +
-		'-(?P<to>\d{4}\d{2}\d{2})-(?P<from>\d{4}\d{2}\d{2})(-?P<inc>\d+)?.csv')
+		'^' + re.escape(prefix) + '\-(?P<to>\d{8})\-(?P<from>\d{8})(?P<inc>\-\d+)?.csv$')
 	for path in glob.glob(prefix + '*'):
 		result = file_pattern.match(path)
 		if result is None:
