@@ -1,7 +1,7 @@
 import os.path
 
 
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 
 def load_yaml(path):
