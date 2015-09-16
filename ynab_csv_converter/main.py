@@ -30,8 +30,8 @@ def main():
 	inform_modname = 'ynab_csv_converter.formats.' + formula['format']
 	informat = importlib.import_module(inform_modname)
 
-	out_basename = os.path.join(formula['outpath'], formula['outprefix'])
-	archive_basename = os.path.join(formula['archivepath'], formula['outprefix'])
+	out_prefix = os.path.join(formula['outpath'], formula['outprefix'])
+	archive_prefix = os.path.join(formula['archivepath'], formula['outprefix'])
 
 	for import_file in opts['INFILE']:
 		# Get the lines to import
@@ -43,7 +43,7 @@ def main():
 		import_max = max([line.date for line in all_lines])
 
 		# Find previously converted files
-		previously_converted = list(find_daterange(out_basename, import_min, import_max))
+		previously_converted = list(find_daterange(out_prefix, import_min, import_max))
 
 		# Get all lines from those previously converted files
 		prev_lines = chain(*(formats.ynab.getlines(path) for path in previously_converted))
@@ -66,12 +66,12 @@ def main():
 			export_min = min([line.date for line in unique_lines])
 			export_max = max([line.date for line in unique_lines])
 			date_suffix = '-' + export_max.strftime('%Y%m%d') + '-' + export_min.strftime('%Y%m%d')
-			output_filepath = out_basename + date_suffix + '.csv'
+			output_filepath = out_prefix + date_suffix + '.csv'
 			# Handle duplicate filenames by tacking on an increment counter
 			increment = 0
 			while os.path.exists(output_filepath):
 				increment += 1
-				output_filepath = out_basename + date_suffix + '-' + str(increment) + '.csv'
+				output_filepath = out_prefix + date_suffix + '-' + str(increment) + '.csv'
 
 			# Write import lines to outputfile
 			formats.ynab.putlines(output_filepath, unique_lines)
@@ -85,11 +85,11 @@ def main():
 
 		# Archive original file (use the total daterange for the filename)
 		date_suffix = '-' + import_max.strftime('%Y%m%d') + '-' + import_min.strftime('%Y%m%d')
-		archive_filepath = archive_basename + date_suffix + '.csv'
+		archive_filepath = archive_prefix + date_suffix + '.csv'
 		increment = 0
 		while os.path.exists(archive_filepath):
 			increment += 1
-			archive_filepath = archive_basename + date_suffix + '-' + str(increment) + '.csv'
+			archive_filepath = archive_prefix + date_suffix + '-' + str(increment) + '.csv'
 		shutil.move(import_file, archive_filepath)
 
 
@@ -98,14 +98,14 @@ def factor_line(line, factor):
 	return YnabLine(line.date, line.payee, line.category, line.memo, factor * line.outflow, factor * line.inflow)
 
 
-def find_daterange(basename, min_date, max_date):
+def find_daterange(prefix, min_date, max_date):
 	import datetime
 	import re
 	import glob
 	file_pattern = re.compile(
-		'^' + re.escape(basename) +
+		'^' + re.escape(prefix) +
 		'-(?P<to>\d{4}\d{2}\d{2})-(?P<from>\d{4}\d{2}\d{2})(-?P<inc>\d+)?.csv')
-	for path in glob.glob(basename + '*'):
+	for path in glob.glob(prefix + '*'):
 		result = file_pattern.match(path)
 		if result is None:
 			raise Exception('Found file that does not match pattern: ' + path)
