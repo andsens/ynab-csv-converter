@@ -1,7 +1,5 @@
-
-def parse_opts():
-	import docopt
-	usage = """ynab-csv-converter
+#!/usr/bin/env python2
+"""ynab-csv-converter
 Converts transactionlists from a format to ynab format
 
 Usage: ynab-csv-converter [options] FORMULA INFILE...
@@ -14,17 +12,17 @@ Supported formats:
   sparekassen  Sparekassen Kronjylland netbank export
   danskebank   CSV tab-separated export from Danske Bank netbank
 """
-	return docopt.docopt(usage)
 
 
 def main():
+	import docopt
 	from . import load_formula
 	import formats.ynab
 	import os.path
 	import shutil
 	import importlib
 	from itertools import chain
-	opts = parse_opts()
+	opts = docopt.docopt(__doc__)
 	formula = load_formula(opts['FORMULA'])
 
 	inform_modname = 'ynab_csv_converter.formats.' + formula['format']
@@ -112,3 +110,6 @@ def find_daterange(prefix, min_date, max_date):
 		todate = datetime.datetime.strptime(result.group('to'), '%Y%m%d')
 		if fromdate <= max_date and todate >= min_date:
 			yield path
+
+if __name__ == '__main__':
+	main()
