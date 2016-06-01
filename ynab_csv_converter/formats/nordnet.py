@@ -71,7 +71,7 @@ def getlines(path):
 					payee = line.trns_type.capitalize()
 					memo = u''
 				category = u''
-				amount = locale.atof(line.amount) * conv[line.currency]
+				amount = round(locale.atof(line.amount) * conv[line.currency], 2)
 				if amount > 0:
 					outflow = 0.0
 					inflow = amount

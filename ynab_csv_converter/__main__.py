@@ -93,7 +93,8 @@ def main():
 
 def factor_line(line, factor):
 	from formats.ynab import YnabLine
-	return YnabLine(line.date, line.payee, line.category, line.memo, factor * line.outflow, factor * line.inflow)
+	return YnabLine(line.date, line.payee, line.category, line.memo,
+	                round(factor * line.outflow, 2), round(factor * line.inflow, 2))
 
 
 def find_daterange(prefix, min_date, max_date):
