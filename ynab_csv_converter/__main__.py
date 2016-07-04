@@ -8,9 +8,10 @@ Options:
     -h, --help  show this help
 
 Supported formats:
-  nordnet      "XLS compatible" (read: csv) export from nordnet.dk
-  sparekassen  Sparekassen Kronjylland netbank export
-  danskebank   CSV tab-separated export from Danske Bank netbank
+  nordnet          "XLS compatible" (read: csv) export from nordnet.dk
+  sparekassen      Sparekassen Kronjylland netbank export
+  danskebank       CSV tab-separated export from Danske Bank netbank
+  hypovereinsbank  CSV export from HypoVereinsbank
 """
 
 
