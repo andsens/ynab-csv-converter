@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 import re
 from collections import namedtuple
 
@@ -14,21 +15,17 @@ column_patterns = {column: re.compile(regex) for column, regex in column_pattern
 
 
 def getlines(path):
-    from ynab_csv_converter.unicode_csv import UnicodeReader
     import csv
     import datetime
     from . import validate_line
 
-    with open(path) as handle:
-        transactions = UnicodeReader(handle, delimiter=',',
-                                     quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    with open(path, 'r', encoding='utf-8') as handle:
+        transactions = csv.reader(handle, delimiter=',', quotechar='"',
+                                  quoting=csv.QUOTE_MINIMAL)
         # Skip headers
-        transactions.next()
-        line_no = 1
+        next(transactions)
         for raw_line in transactions:
-            line_no += 1
             try:
-                # No need to encode, ynab files are already in utf-8
                 line = YnabLine(*raw_line)
                 validate_line(line, column_patterns)
 
@@ -38,25 +35,26 @@ def getlines(path):
             except:
                 import sys
                 msg = ("There was a problem on line {line} in {path}\n"
-                       .format(line=line_no, path=path))
+                       .format(line=transactions.line_num, path=path))
                 sys.stderr.write(msg)
                 raise
             yield YnabLine(date, line.payee, line.category, line.memo, outflow, inflow)
 
 
-def putlines(path, lines):
-    from ynab_csv_converter.unicode_csv import UnicodeWriter
+@contextmanager
+def write_file(path):
     import csv
-
-    with open(path, 'w') as handle:
-        transactions_out = UnicodeWriter(handle, delimiter=',',
-                                         quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    with open(path, 'w', encoding='iso-8859-1') as handle:
+        transactions_out = csv.writer(handle, delimiter=',', quotechar='"',
+                                      quoting=csv.QUOTE_MINIMAL)
         transactions_out.writerow(['Date', 'Payee', 'Category', 'Memo', 'Outflow', 'Inflow'])
-        for line in lines:
+
+        def putline(line):
             transactions_out.writerow([line.date.strftime('%d/%m/%Y'),
                                        line.payee,
                                        line.category,
                                        line.memo,
-                                       str(format(line.outflow, '.2f')),
-                                       str(format(line.inflow, '.2f')),
+                                       format(line.outflow, '.2f'),
+                                       format(line.inflow, '.2f'),
                                        ])
+        yield putline

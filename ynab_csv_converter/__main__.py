@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 """ynab-csv-converter
 Converts transactionlists from a format to ynab format
 
@@ -18,7 +18,7 @@ Supported formats:
 def main():
     import docopt
     from . import load_formula
-    import formats.ynab
+    from .formats import ynab
     import os.path
     import shutil
     import importlib
@@ -45,7 +45,7 @@ def main():
         previously_converted = list(find_daterange(out_prefix, import_min, import_max))
 
         # Get all lines from those previously converted files
-        prev_lines = chain(*(formats.ynab.getlines(path) for path in previously_converted))
+        prev_lines = chain(*(ynab.getlines(path) for path in previously_converted))
 
         # Filter previous lines to only contain transactions inside the import daterange
         # (also cache this one, we do multiple lookups)
@@ -73,7 +73,9 @@ def main():
                 output_filepath = out_prefix + date_suffix + '-' + str(increment) + '.csv'
 
             # Write import lines to outputfile
-            formats.ynab.putlines(output_filepath, unique_lines)
+            with ynab.write_file(output_filepath) as put_line:
+                for line in unique_lines:
+                    put_line(line)
 
             print("Wrote {written} out of {read} transactions to {path}"
                   .format(written=len(unique_lines),
@@ -93,7 +95,7 @@ def main():
 
 
 def factor_line(line, factor):
-    from formats.ynab import YnabLine
+    from .formats.ynab import YnabLine
     return YnabLine(line.date, line.payee, line.category, line.memo,
                     round(factor * line.outflow, 2), round(factor * line.inflow, 2))
 
