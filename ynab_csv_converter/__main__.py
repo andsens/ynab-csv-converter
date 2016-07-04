@@ -17,81 +17,89 @@ Supported formats:
 
 def main():
     import docopt
-    from . import load_formula
-    from .formats import ynab
-    import os.path
-    import shutil
-    import importlib
-    from itertools import chain
     opts = docopt.docopt(__doc__)
-    formula = load_formula(opts['FORMULA'])
 
-    inform_modname = 'ynab_csv_converter.formats.' + formula['format']
-    informat = importlib.import_module(inform_modname)
+    try:
+        from . import load_formula
+        from .formats import ynab
+        import os.path
+        import shutil
+        import importlib
+        from itertools import chain
+        formula = load_formula(opts['FORMULA'])
 
-    out_prefix = os.path.join(formula['outpath'], formula['outprefix'])
-    archive_prefix = os.path.join(formula['archivepath'], formula['outprefix'])
+        inform_modname = 'ynab_csv_converter.formats.' + formula['format']
+        informat = importlib.import_module(inform_modname)
 
-    for import_file in opts['INFILE']:
-        # Get the lines to import
-        # (and cache the list, we will iterate through it multiple times)
-        all_lines = list(informat.getlines(import_file))
+        out_prefix = os.path.join(formula['outpath'], formula['outprefix'])
+        archive_prefix = os.path.join(formula['archivepath'], formula['outprefix'])
 
-        # Find the daterange we are importing
-        import_min = min([line.date for line in all_lines])
-        import_max = max([line.date for line in all_lines])
+        for import_file in opts['INFILE']:
+            # Get the lines to import
+            # (and cache the list, we will iterate through it multiple times)
+            all_lines = list(informat.getlines(import_file))
 
-        # Find previously converted files
-        previously_converted = list(find_daterange(out_prefix, import_min, import_max))
+            # Find the daterange we are importing
+            import_min = min([line.date for line in all_lines])
+            import_max = max([line.date for line in all_lines])
 
-        # Get all lines from those previously converted files
-        prev_lines = chain(*(ynab.getlines(path) for path in previously_converted))
+            # Find previously converted files
+            previously_converted = list(find_daterange(out_prefix, import_min, import_max))
 
-        # Filter previous lines to only contain transactions inside the import daterange
-        # (also cache this one, we do multiple lookups)
-        consolidation_lines = list([line for line in prev_lines if import_min <= line.date <= import_max])
+            # Get all lines from those previously converted files
+            prev_lines = chain(*(ynab.getlines(path) for path in previously_converted))
 
-        # Filter import lines using the previously converted transactions
-        unique_lines = [line for line in all_lines if line not in consolidation_lines]
+            # Filter previous lines to only contain transactions inside the import daterange
+            # (also cache this one, we do multiple lookups)
+            consolidation_lines = list([line for line in prev_lines if import_min <= line.date <= import_max])
 
-        factor = formula.get('factor', 1)
-        if factor != 1:
-            # Multiply unique import lines by "factor"
-            unique_lines = list([factor_line(line, formula['factor']) for line in unique_lines])
+            # Filter import lines using the previously converted transactions
+            unique_lines = [line for line in all_lines if line not in consolidation_lines]
 
-        if len(unique_lines) > 0:
-            # Find the daterange we are exporting and create the name for the output file with that
-            # We reverse the date order so that the files are sorted by newest transaction
-            export_min = min([line.date for line in unique_lines])
-            export_max = max([line.date for line in unique_lines])
-            date_suffix = '-' + export_max.strftime('%Y%m%d') + '-' + export_min.strftime('%Y%m%d')
-            output_filepath = out_prefix + date_suffix + '.csv'
-            # Handle duplicate filenames by tacking on an increment counter
+            factor = formula.get('factor', 1)
+            if factor != 1:
+                # Multiply unique import lines by "factor"
+                unique_lines = list([factor_line(line, formula['factor']) for line in unique_lines])
+
+            if len(unique_lines) > 0:
+                # Find the daterange we are exporting and create the name for the output file with that
+                # We reverse the date order so that the files are sorted by newest transaction
+                export_min = min([line.date for line in unique_lines])
+                export_max = max([line.date for line in unique_lines])
+                date_suffix = '-' + export_max.strftime('%Y%m%d') + '-' + export_min.strftime('%Y%m%d')
+                output_filepath = out_prefix + date_suffix + '.csv'
+                # Handle duplicate filenames by tacking on an increment counter
+                increment = 0
+                while os.path.exists(output_filepath):
+                    increment += 1
+                    output_filepath = out_prefix + date_suffix + '-' + str(increment) + '.csv'
+
+                # Write import lines to outputfile
+                with ynab.write_file(output_filepath) as put_line:
+                    for line in unique_lines:
+                        put_line(line)
+
+                print("Wrote {written} out of {read} transactions to {path}"
+                      .format(written=len(unique_lines),
+                              read=len(all_lines),
+                              path=output_filepath))
+            else:
+                print("No unique lines found in {path}".format(path=import_file))
+
+            # Archive original file (use the total daterange for the filename)
+            date_suffix = '-' + import_max.strftime('%Y%m%d') + '-' + import_min.strftime('%Y%m%d')
+            archive_filepath = archive_prefix + date_suffix + '.csv'
             increment = 0
-            while os.path.exists(output_filepath):
+            while os.path.exists(archive_filepath):
                 increment += 1
-                output_filepath = out_prefix + date_suffix + '-' + str(increment) + '.csv'
-
-            # Write import lines to outputfile
-            with ynab.write_file(output_filepath) as put_line:
-                for line in unique_lines:
-                    put_line(line)
-
-            print("Wrote {written} out of {read} transactions to {path}"
-                  .format(written=len(unique_lines),
-                          read=len(all_lines),
-                          path=output_filepath))
-        else:
-            print("No unique lines found in {path}".format(path=import_file))
-
-        # Archive original file (use the total daterange for the filename)
-        date_suffix = '-' + import_max.strftime('%Y%m%d') + '-' + import_min.strftime('%Y%m%d')
-        archive_filepath = archive_prefix + date_suffix + '.csv'
-        increment = 0
-        while os.path.exists(archive_filepath):
-            increment += 1
-            archive_filepath = archive_prefix + date_suffix + '-' + str(increment) + '.csv'
-        shutil.move(import_file, archive_filepath)
+                archive_filepath = archive_prefix + date_suffix + '-' + str(increment) + '.csv'
+            shutil.move(import_file, archive_filepath)
+    except Exception as e:
+        if opts['--debug']:
+            raise
+        import sys
+        sys.stderr.write(e.message + '\n')
+        sys.exit(1)
 
 
 def factor_line(line, factor):
