@@ -44,7 +44,7 @@ def getlines(path):
 @contextmanager
 def write_file(path):
     import csv
-    with open(path, 'w', encoding='iso-8859-1') as handle:
+    with open(path, 'w', encoding='utf-8') as handle:
         transactions_out = csv.writer(handle, delimiter=',', quotechar='"',
                                       quoting=csv.QUOTE_MINIMAL)
         transactions_out.writerow(['Date', 'Payee', 'Category', 'Memo', 'Outflow', 'Inflow'])
