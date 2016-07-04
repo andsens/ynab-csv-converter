@@ -56,10 +56,8 @@ def main():
             # Filter import lines using the previously converted transactions
             unique_lines = [line for line in all_lines if line not in consolidation_lines]
 
-            factor = formula.get('factor', 1)
-            if factor != 1:
-                # Multiply unique import lines by "factor"
-                unique_lines = list([factor_line(line, formula['factor']) for line in unique_lines])
+            # Multiply unique import lines by "factor"
+            unique_lines = list([factor_line(line, formula.get('factor', 1)) for line in unique_lines])
 
             if len(unique_lines) > 0:
                 # Find the daterange we are exporting and create the name for the output file with that
