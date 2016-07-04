@@ -38,51 +38,51 @@ column_patterns = {column: re.compile(regex) for column, regex in column_pattern
 
 
 def getlines(path):
-	from ynab_csv_converter.unicode_csv import UnicodeReader
-	import csv
-	import datetime
-	import locale
-	from . import validate_line
-	from ynab import YnabLine
+    from ynab_csv_converter.unicode_csv import UnicodeReader
+    import csv
+    import datetime
+    import locale
+    from . import validate_line
+    from ynab import YnabLine
 
-	with open(path) as handle:
-		transactions = UnicodeReader(handle, encoding='iso-8859-1',
-		                             delimiter=';', quotechar='"',
-		                             quoting=csv.QUOTE_MINIMAL)
-		locale.setlocale(locale.LC_ALL, 'da_DK.UTF-8')
-		conv = {'EUR': 7.46, 'USD': 6.68, 'DKK': 1}
-		# Skip headers
-		transactions.next()
-		line_no = 1
-		for raw_line in transactions:
-			line_no += 1
-			if len(raw_line) == 0:
-				# export may contain empty lines
-				continue
-			try:
-				line = NordnetLine(*raw_line)
-				validate_line(line, column_patterns)
+    with open(path) as handle:
+        transactions = UnicodeReader(handle, encoding='iso-8859-1',
+                                     delimiter=';', quotechar='"',
+                                     quoting=csv.QUOTE_MINIMAL)
+        locale.setlocale(locale.LC_ALL, 'da_DK.UTF-8')
+        conv = {'EUR': 7.46, 'USD': 6.68, 'DKK': 1}
+        # Skip headers
+        transactions.next()
+        line_no = 1
+        for raw_line in transactions:
+            line_no += 1
+            if len(raw_line) == 0:
+                # export may contain empty lines
+                continue
+            try:
+                line = NordnetLine(*raw_line)
+                validate_line(line, column_patterns)
 
-				date = datetime.datetime.strptime(line.bogf_date, '%Y-%m-%d')
-				if line.instr_type == 'Aktie':
-					payee = u'{action} {code}'.format(action=line.trns_type.capitalize(), code=line.stock_name)
-					memo = u'{qty} stk. til {cur} {price}'.format(qty=line.quantity, price=line.price, cur=line.currency)
-				else:
-					payee = line.trns_type.capitalize()
-					memo = u''
-				category = u''
-				amount = round(locale.atof(line.amount) * conv[line.currency], 2)
-				if amount > 0:
-					outflow = 0.0
-					inflow = amount
-				else:
-					outflow = -amount
-					inflow = 0.0
-			except:
-				import sys
-				msg = ("There was a problem on line {line} in {path}\n"
-				       .format(line=line_no, path=path))
-				sys.stderr.write(msg)
-				raise
+                date = datetime.datetime.strptime(line.bogf_date, '%Y-%m-%d')
+                if line.instr_type == 'Aktie':
+                    payee = u'{action} {code}'.format(action=line.trns_type.capitalize(), code=line.stock_name)
+                    memo = u'{qty} stk. til {cur} {price}'.format(qty=line.quantity, price=line.price, cur=line.currency)
+                else:
+                    payee = line.trns_type.capitalize()
+                    memo = u''
+                category = u''
+                amount = round(locale.atof(line.amount) * conv[line.currency], 2)
+                if amount > 0:
+                    outflow = 0.0
+                    inflow = amount
+                else:
+                    outflow = -amount
+                    inflow = 0.0
+            except:
+                import sys
+                msg = ("There was a problem on line {line} in {path}\n"
+                       .format(line=line_no, path=path))
+                sys.stderr.write(msg)
+                raise
 
-			yield YnabLine(date, payee, category, memo, outflow, inflow)
+            yield YnabLine(date, payee, category, memo, outflow, inflow)
