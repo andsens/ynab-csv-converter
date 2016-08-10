@@ -15,23 +15,19 @@ column_patterns = {column: re.compile(regex) for column, regex in column_pattern
 
 
 def getlines(path):
-    from ynab_csv_converter.unicode_csv import UnicodeReader
     import csv
     import datetime
     import locale
     from . import validate_line
-    from ynab import YnabLine
+    from .ynab import YnabLine
 
-    with open(path) as handle:
-        transactions = UnicodeReader(handle, encoding='iso-8859-1',
-                                     delimiter=';', quotechar='"',
-                                     quoting=csv.QUOTE_ALL)
+    with open(path, 'r', encoding='iso-8859-1') as handle:
+        transactions = csv.reader(handle, delimiter=';', quotechar='"',
+                                  quoting=csv.QUOTE_MINIMAL)
         locale.setlocale(locale.LC_ALL, 'da_DK.UTF-8')
         # Skip headers
-        transactions.next()
-        line_no = 1
+        next(transactions)
         for raw_line in transactions:
-            line_no += 1
             try:
                 line = DanskebankLine(*raw_line)
                 validate_line(line, column_patterns)
@@ -49,7 +45,7 @@ def getlines(path):
             except:
                 import sys
                 msg = (u"There was a problem on line {line} in {path}\n"
-                       .format(line=line_no, path=path))
+                       .format(line=transactions.line_num, path=path))
                 sys.stderr.write(msg)
                 raise
 
