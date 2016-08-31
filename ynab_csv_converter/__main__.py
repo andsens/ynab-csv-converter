@@ -106,11 +106,11 @@ def convert(opts):
         # (also cache this one, we do multiple lookups)
         consolidation_lines = list([line for line in prev_lines if import_min <= line.date <= import_max])
 
+        # Multiply import lines by "factor"
+        all_lines = list([factor_line(line, formula.get('factor', 1)) for line in all_lines])
+
         # Filter import lines using the previously converted transactions
         unique_lines = [line for line in all_lines if line not in consolidation_lines]
-
-        # Multiply unique import lines by "factor"
-        unique_lines = list([factor_line(line, formula.get('factor', 1)) for line in unique_lines])
 
         if len(unique_lines) > 0:
             output_filepath, fromdate, todate, increment = get_filename_parts(out_prefix, unique_lines)
