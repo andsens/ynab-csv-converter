@@ -10,7 +10,7 @@ converted exports.
 Installation
 -----
 ```sh
-pip install --egg git+ssh://git@github.com/andsens/ynab-csv-converter@nynab
+pip3 install git+ssh://git@github.com/andsens/ynab-csv-converter
 ```
 
 Usage
