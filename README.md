@@ -10,7 +10,7 @@ converted exports.
 Installation
 -----
 ```sh
-pip3 install git+ssh://git@github.com/andsens/ynab-csv-converter
+pip3 install https://github.com/andsens/ynab-csv-converter/archive/master.tar.gz
 ```
 
 Usage
