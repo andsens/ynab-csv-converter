@@ -20,9 +20,9 @@ def getlines(path):
     from . import validate_line
     from .ynab import YnabLine
 
-    with open(path, 'r', encoding='utf-8') as handle:
+    with open(path, 'r', encoding='utf-8-sig') as handle:
         transactions = csv.reader(handle, delimiter=';', quotechar='"',
-                                  quoting=csv.QUOTE_MINIMAL)
+                                  quoting=csv.QUOTE_ALL)
         locale.setlocale(locale.LC_ALL, 'da_DK.UTF-8')
 
         for raw_line in transactions:
