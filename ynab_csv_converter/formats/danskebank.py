@@ -42,7 +42,7 @@ def getlines(path):
                 else:
                     outflow = -amount
                     inflow = 0.0
-            except:
+            except Exception:
                 import sys
                 msg = (u"There was a problem on line {line} in {path}\n"
                        .format(line=transactions.line_num, path=path))

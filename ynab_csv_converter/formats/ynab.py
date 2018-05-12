@@ -32,7 +32,7 @@ def getlines(path):
                 date = datetime.datetime.strptime(line.date, '%d/%m/%Y')
                 outflow = float(line.outflow)
                 inflow = float(line.inflow)
-            except:
+            except Exception:
                 import sys
                 msg = ("There was a problem on line {line} in {path}\n"
                        .format(line=transactions.line_num, path=path))
