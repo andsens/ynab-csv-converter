@@ -155,7 +155,7 @@ def find_files(prefix):
     import glob
     file_pattern = re.compile(
         '^' + re.escape(prefix) + '\-(?P<to>\d{8})\-(?P<from>\d{8})(\-(?P<inc>\d+))?.csv$')
-    for path in glob.glob(prefix + '*'):
+    for path in glob.glob(prefix + '-' + '[0-9]' * 8 + '-' + '[0-9]' * 8 + '*.csv'):
         result = file_pattern.match(path)
         if result is None:
             raise Exception('Found file that does not match pattern: ' + path)
