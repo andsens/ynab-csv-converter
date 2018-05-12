@@ -1,5 +1,4 @@
-YNAB CSV Converter
-==============
+# YNAB CSV Converter
 
 Converts bank record CSV files in various formats to YNAB CSV format.
 
@@ -7,18 +6,18 @@ Any previously converted files will be looked up so that a converted
 export only contains unique transactions with respect to already
 converted exports.
 
-Installation
------
+## Installation
+
 ```sh
 pip3 install https://github.com/andsens/ynab-csv-converter/archive/master.tar.gz
 ```
 
-Usage
------
+## Usage
+
 Usage: `ynab-csv-converter [options] FORMULA INFILE...`
 
-Formula
--------
+## Formula
+
 ```yml
 format: sparekassen
 outpath: /home/andsens/converted
@@ -39,9 +38,9 @@ while the original file is archived at `/home/andsens/archive/sparekassen-euro-[
 The `daterange` corresponds to the dates of the latest and earliest transaction
 (in that order, so that newest exports are sorted last).
 
-Supported formats
------------------
-* DanskeBank (key: danskebank)
-* Sparekassen (key: sparekassen)
-* Nordnet (key: nordnet)
-* HypoVereinsbank (key: hypovereinsbank)
+## Supported formats
+
+*  DanskeBank (key: danskebank)
+*  Sparekassen (key: sparekassen)
+*  Nordnet (key: nordnet)
+*  HypoVereinsbank (key: hypovereinsbank)
