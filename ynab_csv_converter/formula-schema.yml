@@ -10,6 +10,7 @@ properties:
     - sparekassen
     - danskebank
     - nordnet
+    - eika
     - hypovereinsbank
   outpath: {$ref: '#/definitions/path'}
   archivepath: {$ref: '#/definitions/path'}
