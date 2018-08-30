@@ -25,10 +25,9 @@ def getlines(path):
     from . import validate_line
     from .ynab import YnabLine
 
-    with open(path) as handle:
-        with open(path, 'r', encoding='iso-8859-1') as handle:
-            transactions = csv.reader(handle, delimiter=';', quotechar='"',
-                                      quoting=csv.QUOTE_MINIMAL)
+    with open(path, 'r', encoding='iso-8859-1') as handle:
+        transactions = csv.reader(handle, delimiter=';', quotechar='"',
+                                  quoting=csv.QUOTE_MINIMAL)
         locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
         # Skip headers
