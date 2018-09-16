@@ -65,8 +65,11 @@ def getlines(path):
                     m = re.search(r'(?<=VISA VARE \w{16} )(?P<date>\d{2}.\d{2})  ?(?P<cost>\w{0,3} ?\d*?,?\d*?) (?P<payee>.+?) (?=Kurs)', line.text)
                     m = m if m is not None \
                             else re.search(r'(?<=VISA VARE \w{16} )(?P<date>\d{2}.\d{2})  ?(?P<cost>\w{0,3} ?\d*?,?\d*?) (?P<payee>.+)', line.text)
-                    payee = m.group('payee')
-                    memo = m.group('cost') if m.group('cost') is not '0,00' else ''
+                    m = m if m is not None \
+                            else re.search(r'(?<=VISA VARE \w{16} )(?P<date>\d{2}.\d{2})  ?(?P<payee>.+)', line.text)
+                    transaction = m.groupdict()
+                    payee = transaction.get('payee', line.text)
+                    memo = transaction.get('cost', '') if transaction.get('cost') is not '0,00' else ''
 
                 elif re.match(r'Lønn', line.text):
                     payee = re.search(r'(?<=Lønn - ).*', line.text)[0]
@@ -81,12 +84,12 @@ def getlines(path):
                 else:
                     outflow = -amount
                     inflow = 0.0
-            except Exception:
+            except Exception as e:
                 import sys
                 msg = ("There was a problem on line {line} in {path}, Python line {line_code}\n"
                        .format(line=transactions.line_num, path=path, line_code=sys.exc_info()[2].tb_lineno))
                 sys.stderr.write(raw_line[2] + "\n")
                 sys.stderr.write(msg)
-                raise
+                raise e
 
             yield YnabLine(date, payee, category, memo, outflow, inflow)
