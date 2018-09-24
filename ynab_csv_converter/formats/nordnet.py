@@ -35,6 +35,7 @@ column_patterns = {'line_id':     r'^\d{9,}$',
                    'verification_number': r'^\d{8,}$',
                    }
 column_patterns = {column: re.compile(regex) for column, regex in column_patterns.items()}
+txn_date_descends = True
 
 
 def getlines(path):

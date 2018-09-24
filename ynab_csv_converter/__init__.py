@@ -1,7 +1,7 @@
 import os.path
 
 
-__version__ = '0.0.8'
+__version__ = '0.0.9'
 
 
 def load_yaml(path):
@@ -24,9 +24,12 @@ def validate_formula(formula):
 def load_formula(formula_path):
     from . import load_yaml
     from . import validate_formula
+    import importlib
     formula = load_yaml(formula_path)
     validate_formula(formula)
-    return formula
+    module_name = 'ynab_csv_converter.formats.' + formula['format']
+    module = importlib.import_module(module_name)
+    return formula, module
 
 
 class FormulaError(Exception):

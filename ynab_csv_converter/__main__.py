@@ -40,12 +40,13 @@ def consolidate(opts):
     from .formats import ynab
     import os
     from itertools import chain
-    formula = load_formula(opts['FORMULA'])
+    formula, formula_module = load_formula(opts['FORMULA'])
 
     out_prefix = os.path.join(formula['outpath'], formula['outprefix'])
 
     # Get all files that were converted with this formula
-    all_converted = [file[0] for file in find_files(out_prefix)]
+    converted_files = sorted(find_files(out_prefix), reverse=formula_module.txn_date_descends)
+    all_converted = [file[0] for file in converted_files]
     if len(all_converted) < 2:
         raise Exception('There must be at least 2 files to consolidate')
 
@@ -77,12 +78,8 @@ def convert(opts):
     from .formats import ynab
     import os.path
     import shutil
-    import importlib
     from itertools import chain
-    formula = load_formula(opts['FORMULA'])
-
-    inform_modname = 'ynab_csv_converter.formats.' + formula['format']
-    informat = importlib.import_module(inform_modname)
+    formula, formula_module = load_formula(opts['FORMULA'])
 
     out_prefix = os.path.join(formula['outpath'], formula['outprefix'])
     archive_prefix = os.path.join(formula['archivepath'], formula['outprefix'])
@@ -90,7 +87,7 @@ def convert(opts):
     for import_file in opts['INFILE']:
         # Get the lines to import
         # (and cache the list, we will iterate through it multiple times)
-        all_lines = list(informat.getlines(import_file))
+        all_lines = list(formula_module.getlines(import_file))
 
         # Find the daterange we are importing
         import_min = min([line.date for line in all_lines])

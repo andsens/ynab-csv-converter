@@ -16,6 +16,7 @@ column_patterns = {'account_no': r'^\d+$',
                    'currency':   r'^[A-Z]{3}$',
                    }
 column_patterns = {column: re.compile(regex) for column, regex in column_patterns.items()}
+txn_date_descends = False
 
 
 def getlines(path):

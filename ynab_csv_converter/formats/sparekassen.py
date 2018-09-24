@@ -11,6 +11,7 @@ column_patterns = {'date':    date_pattern,
                    'balance': amount_pattern,
                    }
 column_patterns = {column: re.compile(regex) for column, regex in column_patterns.items()}
+txn_date_descends = True
 
 
 def getlines(path):

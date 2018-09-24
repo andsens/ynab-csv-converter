@@ -12,6 +12,7 @@ column_patterns = {'date':    r'^\d{2}\.\d{2}\.\d{4}$',
                    'cleared': r'^(Ja|Nej)$',
                    }
 column_patterns = {column: re.compile(regex) for column, regex in column_patterns.items()}
+txn_date_descends = False
 
 
 def getlines(path):
