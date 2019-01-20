@@ -16,6 +16,7 @@ Supported formats:
   sparekassen      Sparekassen Kronjylland netbank export
   danskebank       CSV tab-separated export from Danske Bank netbank
   hypovereinsbank  CSV export from HypoVereinsbank
+  laanspar         CSV export from Lån & Spar
 """
 
 

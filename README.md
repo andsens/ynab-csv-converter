@@ -42,5 +42,6 @@ The `daterange` corresponds to the dates of the latest and earliest transaction
 
 *  DanskeBank (key: danskebank)
 *  Sparekassen (key: sparekassen)
+*  Lån & Spar (key: laanspar)
 *  Nordnet (key: nordnet)
 *  HypoVereinsbank (key: hypovereinsbank)

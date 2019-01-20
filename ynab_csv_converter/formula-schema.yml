@@ -12,6 +12,7 @@ properties:
     - nordnet
     - eika
     - hypovereinsbank
+    - laanspar
   outpath: {$ref: '#/definitions/path'}
   archivepath: {$ref: '#/definitions/path'}
   outprefix: {$ref: '#/definitions/filename'}
