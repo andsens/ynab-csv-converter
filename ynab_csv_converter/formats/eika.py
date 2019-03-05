@@ -6,7 +6,7 @@ SDC "portalbank" solution. Exports from all banks from there should follow the s
 vary.
 
 The module makes a lot of assumptions, and as such should be used on a very, small set of transactions initially.
-Once you've established some trust, and confirmed that my assumptions also hold for use-case, then feel free to help 
+Once you've established some trust, and confirmed that my assumptions also hold for use-case, then feel free to help
 tidy up or come with suggestions.
 
 This module is to be considered untested, unstable, alpha, et cetera.
@@ -64,12 +64,12 @@ def getlines(path):
                 elif re.match(r'^VISA VARE', line.text):
                     m = re.search(r'(?<=VISA VARE \w{16} )(?P<date>\d{2}.\d{2})  ?(?P<cost>\w{0,3} ?\d*?,?\d*?) (?P<payee>.+?) (?=Kurs)', line.text)
                     m = m if m is not None \
-                            else re.search(r'(?<=VISA VARE \w{16} )(?P<date>\d{2}.\d{2})  ?(?P<cost>\w{0,3} ?\d*?,?\d*?) (?P<payee>.+)', line.text)
+                        else re.search(r'(?<=VISA VARE \w{16} )(?P<date>\d{2}.\d{2})  ?(?P<cost>\w{0,3} ?\d*?,?\d*?) (?P<payee>.+)', line.text)
                     m = m if m is not None \
-                            else re.search(r'(?<=VISA VARE \w{16} )(?P<date>\d{2}.\d{2})  ?(?P<payee>.+)', line.text)
+                        else re.search(r'(?<=VISA VARE \w{16} )(?P<date>\d{2}.\d{2})  ?(?P<payee>.+)', line.text)
                     transaction = m.groupdict()
                     payee = transaction.get('payee', line.text)
-                    memo = transaction.get('cost', '') if transaction.get('cost') is not '0,00' else ''
+                    memo = transaction.get('cost', '') if transaction.get('cost') != '0,00' else ''
 
                 elif re.match(r'Lønn', line.text):
                     payee = re.search(r'(?<=Lønn - ).*', line.text)[0]
