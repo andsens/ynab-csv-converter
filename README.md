@@ -40,8 +40,9 @@ The `daterange` corresponds to the dates of the latest and earliest transaction
 
 ## Supported formats
 
-*  DanskeBank (key: danskebank)
-*  Sparekassen (key: sparekassen)
-*  Lån & Spar (key: laanspar)
-*  Nordnet (key: nordnet)
-*  HypoVereinsbank (key: hypovereinsbank)
+- DanskeBank (key: danskebank)
+- Sparekassen (key: sparekassen)
+- Lån & Spar (key: laanspar)
+- Nordnet (key: nordnet)
+- HypoVereinsbank (key: hypovereinsbank)
+- SaxoTraderGo Account Statement (key: saxotradergo)

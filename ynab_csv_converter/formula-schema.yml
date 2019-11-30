@@ -13,6 +13,7 @@ properties:
     - eika
     - hypovereinsbank
     - laanspar
+    - saxotradergo
   outpath: {$ref: '#/definitions/path'}
   archivepath: {$ref: '#/definitions/path'}
   outprefix: {$ref: '#/definitions/filename'}
