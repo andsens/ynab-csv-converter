@@ -1,28 +1,10 @@
 #!/usr/bin/env python3
-"""ynab-csv-converter
-convert: Convert transactionlists from various bank formats to the nYNAB format
-consolidate: Combine all converted files from a formula into one single file
-
-Usage:
-  ynab-csv-converter [options] convert FORMULA INFILE...
-  ynab-csv-converter [options] consolidate FORMULA
-
-Options:
-  -h, --help   show this help
-  -d, --debug  print debug messages (e.g. include stacktrace in errors)
-
-Supported formats:
-  nordnet          "XLS compatible" (read: csv) export from nordnet.dk
-  sparekassen      Sparekassen Kronjylland netbank export
-  danskebank       CSV tab-separated export from Danske Bank netbank
-  hypovereinsbank  CSV export from HypoVereinsbank
-  laanspar         CSV export from Lån & Spar
-"""
 
 
 def main():
     import docopt
-    opts = docopt.docopt(__doc__)
+    from . import __doc__ as doc
+    opts = docopt.docopt(doc)
     try:
         if opts['consolidate']:
             consolidate(opts)

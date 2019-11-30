@@ -1,0 +1,30 @@
+[build-system]
+requires = ["flit"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+dist-name = "ynab-csv-converter"
+module = "ynab_csv_converter"
+author = "Anders Ingemann"
+author-email = "anders@ingemann.de"
+home-page = "https://github.com/andsens/ynab-csv-converter"
+description-file = "README.md"
+license = "Apache-2.0"
+classifiers = [
+  "Topic :: Utilities",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.5",
+  "Programming Language :: Python :: 3.6",
+  "License :: OSI Approved :: MIT License",
+]
+requires-python = ">=3.5"
+requires = ["pyyaml >= 3.10", "jsonschema >= 2.3.0", "docopt >= 0.6.1"]
+
+[tool.flit.scripts]
+"ynab-csv-converter" = "ynab_csv_converter.__main__:main"
+
+[tool.flit.metadata.requires-extra]
+test = [
+  "tox",
+  "flake8",
+]
