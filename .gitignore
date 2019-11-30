@@ -1,3 +1,4 @@
 *.pyc
+/dist
 /.tox
 /ynab_csv_converter.egg-info
