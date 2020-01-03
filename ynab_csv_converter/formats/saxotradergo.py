@@ -3,17 +3,17 @@ import re
 from collections import namedtuple
 
 SaxoTraderGoLine = namedtuple('SaxoTraderGoLine', [
-  'account_id',
-  'posting_date',
-  'value_date',
-  'product',
-  'net_change',
-  'cash_balance'
+    'account_id',
+    'posting_date',
+    'value_date',
+    'product',
+    'net_change',
+    'cash_balance'
 ])
 date_pattern = r'^[0123]\d-[01]\d-[12]\d{3}$'
 amount_pattern = r'^-?\d+\.\d{1,2}$'
-column_patterns = { # 'account_id': r'^\d{6}INET$',
-                   'posting_date': date_pattern,
+# 'account_id': r'^\d{6}INET$',
+column_patterns = {'posting_date': date_pattern,
                    'value_date': date_pattern,
                    # 'product': ,
                    'net_change': amount_pattern,
@@ -21,6 +21,7 @@ column_patterns = { # 'account_id': r'^\d{6}INET$',
                    }
 column_patterns = {column: re.compile(regex) for column, regex in column_patterns.items()}
 txn_date_descends = True
+
 
 def getlines(path):
     import csv
@@ -66,4 +67,4 @@ def parse_text(text):
         matches = result.groupdict()
         return matches['payee'], 'txn #{txnid}'.format(txnid=matches['txnid'])
     else:
-      return text, u''
+        return text, u''
