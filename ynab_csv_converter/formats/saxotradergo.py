@@ -10,7 +10,7 @@ SaxoTraderGoLine = namedtuple('SaxoTraderGoLine', [
     'net_change',
     'cash_balance'
 ])
-date_pattern = r'^[0123]\d-[01]\d-[12]\d{3}$'
+date_pattern = r'^[0123]\d-([01]\d|[a-z]{3})-[12]\d{3}$'
 amount_pattern = r'^-?\d+\.\d{1,2}$'
 # 'account_id': r'^\d{6}INET$',
 column_patterns = {'posting_date': date_pattern,
@@ -41,7 +41,10 @@ def getlines(path):
                 line = SaxoTraderGoLine(*raw_line)
                 validate_line(line, column_patterns)
 
-                date = datetime.datetime.strptime(line.value_date, '%d-%m-%Y')
+                try:
+                    date = datetime.datetime.strptime(line.value_date, '%d-%m-%Y')
+                except ValueError:
+                    date = datetime.datetime.strptime(line.value_date, '%d-%b-%Y')
                 payee, memo = parse_text(line.product)
                 category = u''
                 amount = locale.atof(line.net_change)
