@@ -68,6 +68,6 @@ def parse_text(text):
     result = re.match(r'^(?P<payee>.+) (?P<txnid>\d{9,})$', text)
     if result is not None:
         matches = result.groupdict()
-        return matches['payee'], 'txn #{txnid}'.format(txnid=matches['txnid'])
+        return matches['payee'], '{payee} txn #{txnid}'.format(payee=matches['payee'], txnid=matches['txnid'])
     else:
         return text, u''
