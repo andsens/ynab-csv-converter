@@ -11,7 +11,7 @@ SaxoTraderGoLine = namedtuple('SaxoTraderGoLine', [
     'cash_balance'
 ])
 date_pattern = r'^[0123]\d-([01]\d|[a-z]{3})-[12]\d{3}$'
-amount_pattern = r'^-?\d+\.\d{1,2}$'
+amount_pattern = r'^-?\d+(\.\d{1,2})?$'
 # 'account_id': r'^\d{6}INET$',
 column_patterns = {'posting_date': date_pattern,
                    'value_date': date_pattern,
