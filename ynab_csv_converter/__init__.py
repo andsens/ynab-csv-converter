@@ -24,7 +24,7 @@ Supported formats:
 import os.path
 
 
-__version__ = '0.1.2'
+__version__ = '1.0.0'
 
 
 def load_yaml(path):
