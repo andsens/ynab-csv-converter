@@ -11,11 +11,13 @@ Options:
   -d, --debug  print debug messages (e.g. include stacktrace in errors)
 
 Supported formats:
-  nordnet          "XLS compatible" (read: csv) export from nordnet.dk
-  sparekassen      Sparekassen Kronjylland netbank export
-  danskebank       CSV tab-separated export from Danske Bank netbank
-  hypovereinsbank  CSV export from HypoVereinsbank
-  laanspar         CSV export from Lån & Spar
+  nordnet          nordnet.dk ("XLS compatible")
+  sparekassen      Sparekassen Kronjylland
+  danskebank       Danske Bank (tab separated)
+  hypovereinsbank  HypoVereinsbank
+  laanspar         Lån & Spar
+  eika             Eika
+  saxotradergo     Excel export from SaxoTrader Go, converted to CSV
 """
 
 import os.path
