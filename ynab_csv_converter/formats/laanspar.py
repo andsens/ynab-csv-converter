@@ -1,11 +1,10 @@
 import re
 from collections import namedtuple
 
-LaanSparLine = namedtuple('LaanSparLine', ['date', 'txndate', 'text', 'amount', 'balance', 'unknown', 'unknown2'])
+LaanSparLine = namedtuple('LaanSparLine', ['date', 'text', 'amount', 'balance'])
 amount_pattern = r'^-?\d{1,3}(\.\d{3})*,\d{2}$'
 date_pattern = r'^\d{2}-\d{2}-\d{4}$'
 column_patterns = {'date':    date_pattern,
-                   'txndate': date_pattern,
                    'text':    r'^.+$',
                    'amount':  amount_pattern,
                    'balance': amount_pattern,
@@ -26,6 +25,8 @@ def getlines(path):
                                   quoting=csv.QUOTE_ALL)
         locale.setlocale(locale.LC_ALL, 'da_DK.UTF-8')
 
+        # Skip headers
+        next(transactions)
         for raw_line in transactions:
             try:
                 line = LaanSparLine(*raw_line)
