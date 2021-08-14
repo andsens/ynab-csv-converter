@@ -14,6 +14,7 @@ properties:
     - hypovereinsbank
     - laanspar
     - saxotradergo
+    - banknordik
   outpath: {$ref: '#/definitions/path'}
   archivepath: {$ref: '#/definitions/path'}
   outprefix: {$ref: '#/definitions/filename'}

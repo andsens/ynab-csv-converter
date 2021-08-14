@@ -18,6 +18,7 @@ Supported formats:
   laanspar         Lån & Spar
   eika             Eika
   saxotradergo     Excel export from SaxoTrader Go, converted to CSV
+  banknordik       BankNordik
 """
 
 import os.path
