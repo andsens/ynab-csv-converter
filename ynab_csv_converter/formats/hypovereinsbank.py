@@ -48,7 +48,7 @@ def getlines(path):
                     memo = line.text.capitalize()
                 if len(line.payee2) > 0:
                     memo += ' Empfänger 2: ' + line.payee2.capitalize()
-                amount = locale.atof(line.amount)
+                amount = locale.atof(line.amount.replace('.', ''))
                 if amount > 0:
                     outflow = 0.0
                     inflow = amount
