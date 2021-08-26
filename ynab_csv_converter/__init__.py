@@ -15,6 +15,7 @@ Supported formats:
   sparekassen      Sparekassen Kronjylland
   danskebank       Danske Bank (tab separated)
   hypovereinsbank  HypoVereinsbank
+  americanexpress  American Express
   laanspar         Lån & Spar
   eika             Eika
   saxotradergo     Excel export from SaxoTrader Go, converted to CSV
