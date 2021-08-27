@@ -39,12 +39,12 @@ def getlines(path):
                 payee = re.sub(r'  .*$', '', payee)
                 category = ''
                 memo = line.payer.title()
-                amount = -locale.atof(line.amount)
+                amount = locale.atof(line.amount)
                 if amount > 0:
                     outflow = 0.0
-                    inflow = amount
+                    inflow = -amount
                 else:
-                    outflow = -amount
+                    outflow = amount
                     inflow = 0.0
             except Exception:
                 import sys
