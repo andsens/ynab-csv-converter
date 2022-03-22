@@ -1,14 +1,15 @@
 import re
 from collections import namedtuple
 
-SparekassenLine = namedtuple('SparekassenLine', ['date', 'txndate', 'text', 'amount', 'balance'])
+SparekassenLine = namedtuple('SparekassenLine', ['date', 'text', 'amount', 'balance', 'currency'])
 amount_pattern = r'^-?\d{1,3}(\.\d{3})*,\d{2}$'
 date_pattern = r'^\d{2}-\d{2}-\d{4}$'
+iso_currency_pattern = r'[A-Z]{3}'
 column_patterns = {'date':    date_pattern,
-                   'txndate': date_pattern,
                    'text':    r'^.+$',
                    'amount':  amount_pattern,
                    'balance': amount_pattern,
+                   'currency': iso_currency_pattern,
                    }
 column_patterns = {column: re.compile(regex) for column, regex in column_patterns.items()}
 txn_date_descends = True
@@ -23,11 +24,14 @@ def getlines(path):
 
     with open(path, 'r', encoding='utf-8-sig') as handle:
         transactions = csv.reader(handle, delimiter=';', quotechar='"',
-                                  quoting=csv.QUOTE_ALL)
+                                  quoting=csv.QUOTE_MINIMAL)
         locale.setlocale(locale.LC_ALL, 'da_DK.UTF-8')
 
         for raw_line in transactions:
             try:
+                if len(raw_line) == 6:
+                    # business accounts also export the original amount, ignore it
+                    raw_line = raw_line[0:2] + raw_line[3:6]
                 line = SparekassenLine(*raw_line)
                 validate_line(line, column_patterns)
 
