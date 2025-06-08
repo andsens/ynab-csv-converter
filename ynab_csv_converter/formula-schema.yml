@@ -8,6 +8,7 @@ properties:
   format:
     enum:
     - sparekassen
+    - sparekassen-erhverv
     - danskebank
     - nordnet
     - eika

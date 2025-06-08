@@ -11,16 +11,17 @@ Options:
   -d, --debug  print debug messages (e.g. include stacktrace in errors)
 
 Supported formats:
-  nordnet          nordnet.dk ("XLS compatible")
-  sparekassen      Sparekassen Kronjylland
-  danskebank       Danske Bank (tab separated)
-  hypovereinsbank  HypoVereinsbank
-  americanexpress  American Express
-  starmoney        Starmoney 13
-  laanspar         Lån & Spar
-  eika             Eika
-  saxotradergo     Excel export from SaxoTrader Go, converted to CSV
-  banknordik       BankNordik
+  nordnet              nordnet.dk ("XLS compatible")
+  sparekassen          Sparekassen Kronjylland
+  sparekassen-erhverv  Sparekassen Kronjylland business account
+  danskebank           Danske Bank (tab separated)
+  hypovereinsbank      HypoVereinsbank
+  americanexpress      American Express
+  starmoney            Starmoney 13
+  laanspar             Lån & Spar
+  eika                 Eika
+  saxotradergo         Excel export from SaxoTrader Go, converted to CSV
+  banknordik           BankNordik
 """
 
 import os.path
