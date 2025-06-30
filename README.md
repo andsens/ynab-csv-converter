@@ -9,7 +9,7 @@ converted exports.
 ## Installation
 
 ```sh
-pip3 install https://github.com/andsens/ynab-csv-converter/archive/master.tar.gz
+pipx install ynab-csv-converter
 ```
 
 ## Usage
