@@ -1,0 +1,41 @@
+{
+  "name": "Python 3",
+  "image": "mcr.microsoft.com/vscode/devcontainers/python:0-3.11",
+  "postCreateCommand": ".devcontainer/post.sh",
+  "containerUser": "vscode",
+  "updateRemoteUserUID": true,
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": ".venv/bin/python",
+        "python.analysis.typeCheckingMode": "strict",
+        "python.poetryPath": "${userHome}/.local/bin/poetry",
+        "python.testing.pylintEnabled": true,
+        "python.testing.pytestEnabled": true,
+        "terminal.integrated.env.linux": {
+          "VIRTUAL_ENV_DISABLE_PROMPT": "true"
+        },
+        "files.exclude": {
+          ".venv": true,
+          ".pytest_cache": true,
+          ".hypothesis": true
+        },
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter",
+          "editor.insertSpaces": true,
+          "editor.tabSize": 2
+        }
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "timonwong.shellcheck",
+        "bungcip.better-toml",
+        "asciidoctor.asciidoctor-vscode",
+        "me-dutour-mathieu.vscode-github-actions"
+      ]
+    }
+  }
+}

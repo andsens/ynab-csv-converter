@@ -1,30 +1,36 @@
-[build-system]
-requires = ["flit"]
-build-backend = "flit.buildapi"
-
-[tool.flit.metadata]
-dist-name = "ynab-csv-converter"
-module = "ynab_csv_converter"
-author = "Anders Ingemann"
-author-email = "anders@ingemann.de"
-home-page = "https://github.com/andsens/ynab-csv-converter"
-description-file = "README.md"
+[tool.poetry]
+name = "ynab-csv-converter"
+description = "Convert bank record CSV files in various formats to YNAB CSV format"
+version = "0.0.0-dev"
+authors = ["Anders Ingemann <anders@ingemann.de>"]
 license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/andsens/ynab-csv-converter"
+repository = "https://github.com/andsens/ynab-csv-converter"
 classifiers = [
-  "Topic :: Utilities",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.5",
-  "Programming Language :: Python :: 3.6",
-  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.10",
 ]
-requires-python = ">=3.5"
-requires = ["pyyaml >= 3.10", "jsonschema >= 2.3.0", "docopt >= 0.6.1"]
-
-[tool.flit.scripts]
-"ynab-csv-converter" = "ynab_csv_converter.__main__:main"
-
-[tool.flit.metadata.requires-extra]
-test = [
-  "tox",
-  "flake8",
+packages = [
+  { include = "ynab_csv_converter" },
 ]
+
+[tool.flake8]
+max-line-length = 120
+ignore = "E111,E114,E121,W503,E302,E303,E305"
+
+[tool.poetry.dependencies]
+python = ">=3.11.0,<4.0"
+docopt = "^0.6.2"
+termcolor = "^1.1.0"
+pyyaml = "^6.0"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.0.0"
+
+[tool.poetry.scripts]
+ynab-csv-converter = "ynab_csv_converter.__main__:main"
+
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

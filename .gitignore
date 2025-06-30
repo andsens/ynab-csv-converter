@@ -1,4 +1,6 @@
+__pycache__/
 *.pyc
+/.vscode/settings.json
+/ynab-csv-converter.code-workspace
+/ynab_csv_converter/version.py
 /dist
-/.tox
-/ynab_csv_converter.egg-info
