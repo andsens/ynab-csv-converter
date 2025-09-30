@@ -1,8 +1,8 @@
-[tool.poetry]
+[project]
 name = "ynab-csv-converter"
 description = "Convert bank record CSV files in various formats to YNAB CSV format"
 version = "0.0.0-dev"
-authors = ["Anders Ingemann <anders@ingemann.de>"]
+authors = [{name = "Anders Ingemann"}]
 license = "Apache-2.0"
 readme = "README.md"
 homepage = "https://github.com/andsens/ynab-csv-converter"
@@ -11,25 +11,20 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
 ]
-packages = [
-  { include = "ynab_csv_converter" },
+packages = [{include = "ynab_csv_converter"}]
+requires-python = ">= 3.11,<4"
+dependencies = [
+  "docopt>=0.6.2,<1",
+  "termcolor>=1.1.0,<2",
+  "pyyaml>=6.0,<7",
+  "jsonschema>=4.25.1,<5",
 ]
 
 [tool.flake8]
 max-line-length = 120
 ignore = "E111,E114,E121,W503,E302,E303,E305"
 
-[tool.poetry.dependencies]
-python = ">=3.11.0,<4.0"
-docopt = "^0.6.2"
-termcolor = "^1.1.0"
-pyyaml = "^6.0"
-jsonschema = "^4.25.1"
-
-[tool.poetry.group.dev.dependencies]
-flake8 = "^6.0.0"
-
-[tool.poetry.scripts]
+[project.scripts]
 ynab-csv-converter = "ynab_csv_converter.__main__:main"
 
 [build-system]
