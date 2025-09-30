@@ -24,6 +24,7 @@ python = ">=3.11.0,<4.0"
 docopt = "^0.6.2"
 termcolor = "^1.1.0"
 pyyaml = "^6.0"
+jsonschema = "^4.25.1"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0"
