@@ -6,7 +6,7 @@ amount_pattern = r'^-?\d{1,3}(\.\d{3})*,\d{2}$'
 date_pattern = r'^\d{2}/\d{2}/\d{4}$'
 iso_currency_pattern = r'[A-Z]{3}'
 column_patterns = {'date':    date_pattern,
-                   'text':    r'^.+$',
+                   'text':    r'^(.|\n)+$',
                    'amount':  amount_pattern,
                    'balance':  amount_pattern,
                    }
