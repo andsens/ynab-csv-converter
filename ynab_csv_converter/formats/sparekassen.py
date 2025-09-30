@@ -1,13 +1,14 @@
 import re
 from collections import namedtuple
 
-SparekassenLine = namedtuple('SparekassenLine', ['date', 'text', 'amount'])
+SparekassenLine = namedtuple('SparekassenLine', ['date', 'text', 'amount', 'balance'])
 amount_pattern = r'^-?\d{1,3}(\.\d{3})*,\d{2}$'
 date_pattern = r'^\d{2}/\d{2}/\d{4}$'
 iso_currency_pattern = r'[A-Z]{3}'
 column_patterns = {'date':    date_pattern,
                    'text':    r'^.+$',
                    'amount':  amount_pattern,
+                   'balance':  amount_pattern,
                    }
 column_patterns = {column: re.compile(regex) for column, regex in column_patterns.items()}
 txn_date_descends = True
