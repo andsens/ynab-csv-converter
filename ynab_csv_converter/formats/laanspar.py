@@ -33,7 +33,7 @@ def getlines(path):
                 validate_line(line, column_patterns)
 
                 date = datetime.datetime.strptime(line.date, '%d-%m-%Y')
-                payee = line.text
+                payee = line.text.replace('\n', ' ')
                 category = ''
                 memo = ''
                 amount = locale.atof(line.amount)
