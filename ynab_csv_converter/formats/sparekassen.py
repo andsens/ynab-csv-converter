@@ -1,14 +1,15 @@
 import re
 from collections import namedtuple
 
-SparekassenLine = namedtuple('SparekassenLine', ['date', 'text', 'amount', 'balance'])
+SparekassenLine = namedtuple('SparekassenLine', ['date', 'text', 'amount', 'balance', 'currency'])
 amount_pattern = r'^-?\d{1,3}(\.\d{3})*,\d{2}$'
-date_pattern = r'^\d{2}/\d{2}/\d{4}$'
+date_pattern = r'^\d{2}-\d{2}-\d{4}$'
 iso_currency_pattern = r'[A-Z]{3}'
 column_patterns = {'date':    date_pattern,
                    'text':    r'^(.|\n)+$',
                    'amount':  amount_pattern,
                    'balance':  amount_pattern,
+                   'currency': iso_currency_pattern,
                    }
 column_patterns = {column: re.compile(regex) for column, regex in column_patterns.items()}
 txn_date_descends = True
@@ -34,7 +35,7 @@ def getlines(path):
                 line = SparekassenLine(*raw_line)
                 validate_line(line, column_patterns)
 
-                date = datetime.datetime.strptime(line.date, '%d/%m/%Y')
+                date = datetime.datetime.strptime(line.date, '%d-%m-%Y')
                 payee = line.text.replace('\n', ' ')
                 category = ''
                 memo = ''
